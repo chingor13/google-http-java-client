@@ -98,7 +98,18 @@ public class Base64 {
    * @return Array containing decoded data or {@code null} for {@code null} input
    */
   public static byte[] decodeBase64(String base64String) {
-    return BaseEncoding.base64Url().omitPadding().decode(base64String);
+    return BaseEncoding.base64().decode(base64String);
+  }
+
+  /**
+   * Decodes a URL-safe Base64 String into octets.
+   *
+   * @param base64String String containing Base64 data or {@code null} for {@code null} result
+   * @return Array containing decoded data or {@code null} for {@code null} input
+   * @since 1.26
+   */
+  public static byte[] decodeBase64URLSafeString(String base64String) {
+    return BaseEncoding.base64Url().decode(base64String);
   }
 
   private Base64() {

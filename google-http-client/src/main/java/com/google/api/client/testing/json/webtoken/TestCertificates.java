@@ -305,7 +305,8 @@ public class TestCertificates {
       payload.set("foo", "bar");
       int firstDot = JWS_SIGNATURE.indexOf('.');
       int secondDot = JWS_SIGNATURE.indexOf('.', firstDot + 1);
-      byte[] signatureBytes = Base64.decodeBase64(JWS_SIGNATURE.substring(secondDot + 1));
+      byte[] signatureBytes = Base64.decodeBase64URLSafeString(
+          JWS_SIGNATURE.substring(secondDot + 1));
       byte[] signedContentBytes = StringUtils.getBytesUtf8(JWS_SIGNATURE.substring(0, secondDot));
       JsonWebSignature signature = new JsonWebSignature(
           header, payload, signatureBytes, signedContentBytes);

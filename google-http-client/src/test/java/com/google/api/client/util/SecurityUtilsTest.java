@@ -138,7 +138,7 @@ public class SecurityUtilsTest extends TestCase {
     int separator = jwsSignature.lastIndexOf('.');
     String data = jwsSignature.substring(0, separator);
     String signatureBase64 = jwsSignature.substring(separator + 1);
-    byte[] signature = Base64.decodeBase64(signatureBase64);
+    byte[] signature = Base64.decodeBase64URLSafeString(signatureBase64);
     X509TrustManager trustManager = caCert.getTrustManager();
     ArrayList<String> certChain = new ArrayList<String>();
     certChain.add(TestCertificates.FOO_BAR_COM_CERT.getBase64Der());
