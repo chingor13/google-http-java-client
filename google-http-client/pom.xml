@@ -21,7 +21,7 @@
         <configuration>
           <links>
             <link>http://download.oracle.com/javase/6/docs/api/</link>
-            <link>https://google.github.io/guava/releases/20.0/api/docs/</link>
+            <link>https://google.github.io/guava/releases/${project.guava.version}/api/docs/</link>
             <link>http://commons.apache.org/proper/commons-codec/javadocs/api-release</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
