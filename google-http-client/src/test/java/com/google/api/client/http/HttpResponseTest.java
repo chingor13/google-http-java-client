@@ -343,6 +343,61 @@ public class HttpResponseTest extends TestCase {
     assertTrue(lowLevelHttpResponse.isDisconnected());
   }
 
+  public void testTryWithResourcesDisconnectWithContent() throws Exception {
+    final MockLowLevelHttpResponse lowLevelHttpResponse = new MockLowLevelHttpResponse();
+
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                lowLevelHttpResponse.setContentType(Json.MEDIA_TYPE);
+                lowLevelHttpResponse.setContent(SAMPLE);
+                return lowLevelHttpResponse;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+
+    TestableByteArrayInputStream content;
+    try (HttpResponse response = request.execute()) {
+      assertFalse(lowLevelHttpResponse.isDisconnected());
+      content = (TestableByteArrayInputStream) lowLevelHttpResponse.getContent();
+      assertFalse(content.isClosed());
+    }
+    assertTrue(lowLevelHttpResponse.isDisconnected());
+    assertTrue(content.isClosed());
+  }
+
+
+  public void testTryWithResourcesDisconnectWithNoContent() throws Exception {
+    final MockLowLevelHttpResponse lowLevelHttpResponse = new MockLowLevelHttpResponse();
+
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                return lowLevelHttpResponse;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    try (HttpResponse response = request.execute()) {
+      assertFalse(lowLevelHttpResponse.isDisconnected());
+    }
+
+    assertTrue(lowLevelHttpResponse.isDisconnected());
+  }
+
   public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws Exception {
     subtestContentLoggingLimit("", 2, false);
     subtestContentLoggingLimit("A", 2, false);

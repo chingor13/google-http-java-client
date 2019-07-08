@@ -20,6 +20,7 @@ import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +52,7 @@ import java.util.zip.GZIPInputStream;
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class HttpResponse {
+public final class HttpResponse implements Closeable {
 
   /** HTTP response content or {@code null} before {@link #getContent()}. */
   private InputStream content;
@@ -403,6 +404,11 @@ public final class HttpResponse {
   public void disconnect() throws IOException {
     ignore();
     response.disconnect();
+  }
+
+  @Override
+  public void close() throws IOException {
+    disconnect();
   }
 
   /**
